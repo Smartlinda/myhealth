@@ -6,7 +6,20 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from django.contrib.auth.models import AbstractUser, User
 
+class User(AbstractUser):
+  USER_TYPE_CHOICES = (
+      (1, 'doctor'),
+      (2, 'labPeople'),
+      (3, 'receptionist'),
+      (4, 'patient'),
+      (5, 'admin'),
+  )
+
+  user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES,null=True)
+  # class Meta:
+  #       db_table = 'auth_user'
 
 class Department(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
@@ -28,7 +41,7 @@ class Disease(models.Model):
 
 
 class Ehr(models.Model):
-    schedule = models.ForeignKey('Schedule', models.DO_NOTHING, db_column='schedule', primary_key=True)
+    schedule = models.OneToOneField('Schedule', db_column='schedule', primary_key=True, on_delete=models.CASCADE)
     medicalsupply = models.ForeignKey('MedicalSupply', models.DO_NOTHING, db_column='medicalSupply')  # Field name made lowercase.
     amount = models.IntegerField()
 
@@ -81,7 +94,7 @@ class Order(models.Model):
 
 
 class Orderdetail(models.Model):
-    orderid = models.ForeignKey(Order, models.DO_NOTHING, db_column='orderID', primary_key=True)  # Field name made lowercase.
+    orderid = models.OneToOneField(Order, db_column='orderID', primary_key=True, on_delete=models.CASCADE)  # Field name made lowercase.
     medicalsupply = models.ForeignKey(MedicalSupply, models.DO_NOTHING, db_column='medicalSupply')  # Field name made lowercase.
     amount = models.IntegerField()
 
@@ -92,7 +105,7 @@ class Orderdetail(models.Model):
 
 
 class Phr(models.Model):
-    patient = models.ForeignKey('Patient', models.DO_NOTHING, db_column='patient', primary_key=True)
+    patient = models.OneToOneField('Patient', db_column='patient', primary_key=True, on_delete=models.CASCADE)
     weight = models.DecimalField(max_digits=65535, decimal_places=65535, blank=True, null=True)
     height = models.DecimalField(max_digits=65535, decimal_places=65535, blank=True, null=True)
     doctorid = models.ForeignKey('Staff', models.DO_NOTHING, db_column='doctorID', blank=True, null=True)  # Field name made lowercase.
@@ -129,12 +142,12 @@ class Schedule(models.Model):
 
 
 class Staff(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     name = models.CharField(max_length=255)
     tel_no = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     department = models.ForeignKey(Department, models.DO_NOTHING, db_column='department', blank=True, null=True)
-    role = models.CharField(max_length=255)
     hospital = models.ForeignKey(Hospital, models.DO_NOTHING, db_column='hospital', blank=True, null=True)
 
     class Meta:

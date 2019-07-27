@@ -1,6 +1,9 @@
-from django.conf.urls import url
+from django.urls import path,include
 from health import views
 
 urlpatterns = [
-    url(r'^$', views.home, name='home'),
+    path('', views.recephome, name='recephome'),
+    # path('accounts/', include('django.contrib.auth.urls')),
+    # path('accounts/login/', views.user_login, name='login'),
+
 ]
