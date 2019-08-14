@@ -30,16 +30,16 @@
 
   <div id="mySidebar" class="sidebar">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <a href="#">About</a>
-  <a href="#">Services</a>
-  <a href="#">Clients</a>
-  <a href="#">Contact</a>
+  {% block topic1 %}{%endblock%}
+  {% block topic2 %}{%endblock%}
+  {% block topic3 %}{%endblock%}
+  {% block topic4 %}{%endblock%}
 </div>
 
 <div id="main">
   <button class="openbtn" onclick="openNav()">&#9776; Toggle Sidebar</button>
-  <h2>Collapsed Sidebar</h2>
-  <p>Content...</p>
+  <h2>Hi! {{current.first_name}}</h2>
+  <p>{% block bodyblock %}{%endblock%}</p>
 </div>
 <!--
   <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
