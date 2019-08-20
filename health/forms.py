@@ -5,27 +5,32 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 class CustomUserCreationForm(UserCreationForm):
 
+    tel_no = forms.CharField(max_length=255, label='Telephone number')
+    dob = forms.DateField(label='Date of Birth')
+    SEX = [('yes','Female'),('no','Male')]
+    sex = forms.BooleanField(label='Sex',widget=forms.Select(choices = SEX))
+
+
     class Meta(UserCreationForm):
         model = User
-        fields = ('email','user_type',)
+        fields = ('email','user_type','first_name','last_name','sex','tel_no','dob','address',)
+
+    # def __init__(self,user,*args,**kwargs):
+
 
 
 class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ('email','user_type',)
+        fields = ('email','user_type','first_name','last_name','sex','tel_no','dob','address',)
 
 
 class StaffForm(forms.ModelForm):
-    fname = forms.CharField(max_length=255)
-    lname = forms.CharField(max_length=255)
-    tel_no = forms.CharField(max_length=255)
-    sex = forms.BooleanField()
-    email = forms.EmailField(max_length=255)
+
     class Meta:
         model = Staff
-        exclude = ('user','id','department','hospital',)
+        exclude = ('user','department','hospital',)
 
 class DepartmentForm(forms.ModelForm):
     name = forms.CharField(max_length=255)

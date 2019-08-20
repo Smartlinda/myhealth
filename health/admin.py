@@ -1,11 +1,11 @@
 from django.contrib import admin
-from health.models import Staff, Patient
+from health.models import User, Department, Staff, Disease, Ehr,Hospital,LabTest
+from health.models import MedicalSupply,Order,Orderdetail,Phr,Patient,Schedule
 from django.contrib.auth.admin import UserAdmin
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import User
 from django.utils.translation import ugettext_lazy as _
 
-@admin.register(User)
+
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
@@ -32,3 +32,14 @@ class CustomUserAdmin(UserAdmin):
 # Register your models here.
 admin.site.register(Staff)
 admin.site.register(Patient)
+admin.site.register(User,CustomUserAdmin)
+admin.site.register(Department)
+admin.site.register(Disease)
+admin.site.register(Ehr)
+admin.site.register(Hospital)
+admin.site.register(LabTest)
+admin.site.register(MedicalSupply)
+admin.site.register(Order)
+admin.site.register(Orderdetail)
+admin.site.register(Phr)
+admin.site.register(Schedule)

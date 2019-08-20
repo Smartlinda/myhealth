@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.conf.urls import include
 from health.models import Staff
+from .forms import CustomUserCreationForm
 
 #homepage after receptionist logs in
 def recephome(request):
@@ -98,10 +99,15 @@ def user_login(request):
 # No context variables to pass to the template system, hence the # blank dictionary object...
         return render(request, 'health/login.html', {})
 
-#FOR receptionist and doctors to see the schedule for the day
-def schedule(request):
+#FOR receptionist to see the schedule for the day
+def recep_schedule(request):
     context_dict = {}
-    return render(request,'health/schedule.html',context_dict)
+    return render(request,'health/recep_schedule.html',context_dict)
+
+#FOR doctors to see the schedule for the day
+def doc_schedule(request):
+    context_dict = {}
+    return render(request,'health/doc_schedule.html',context_dict)
 
 #for doctors to search the patient ???? maybe not necessary
 # ??? since the doc can add notes through EHR->Schedule
@@ -109,10 +115,15 @@ def search_patient(request):
     context_dict = {}
     return ender(request,'health/search_patient.html',context_dict = {})
 
-#for doctors and patients to view the EHR for accessing edit_schedule view
-def show_EHR(request,nin):
+#for doctors to view the EHR for accessing edit_schedule view
+def doc_show_EHR(request,nin):
     context_dict = {}
-    return render(request,'health/EHR.html',context_dict)
+    return render(request,'health/doc_EHR.html',context_dict)
+
+#for patients to view the EHR for accessing edit_schedule view
+def patient_show_EHR(request,nin):
+    context_dict = {}
+    return render(request,'health/patient_EHR.html',context_dict)
 
 #for doctors to add notes, enter prescriptions etc.
 def edit_schedule(request,scheduleID):
@@ -129,15 +140,26 @@ def upload_result(request,testID):
     context_dict = {}
     return render(request,'health/upload_result.html',context_dict)
 
-##for receptionist and patients to book appointments
-def book_appoint(request):
+#for receptionist to book appointments
+def recep_book_appoint(request):
     context_dict = {}
-    return render(request,'health/book_appoint.html',context_dict)
+    return render(request,'health/recep_book_appoint.html',context_dict)
 
-#for receptionist and patients to cancel appointments
-def cancel_appoint(request):
+#for patients to book appointments
+def patient_book_appoint(request):
     context_dict = {}
-    return render(request,'health/cancel_appoint.html',context_dict)
+    return render(request,'health/patient_book_appoint.html',context_dict)
+
+#for receptionist to cancel appointments
+def recep_cancel_appoint(request):
+    context_dict = {}
+    return render(request,'health/recep_cancel_appoint.html',context_dict)
+
+#for patients to cancel appointments
+def patient_cancel_appoint(request):
+    context_dict = {}
+    return render(request,'health/patient_cancel_appoint.html',context_dict)
+
 
 #for admin to check the stock of all medical supplies
 # def view_stock(request):
@@ -147,6 +169,8 @@ def cancel_appoint(request):
 #for admin to create an account for patients and staffs
 def create_account(request):
     context_dict = {}
+    form = CustomUserCreationForm
+    context_dict['form'] = form
     return render(request,'health/create_account.html',context_dict)
 
 #for patient to edit info stored in EHR

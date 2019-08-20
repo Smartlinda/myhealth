@@ -1,5 +1,9 @@
 {% extends 'health/base.html' %}
 {% load static %}
 {% block topic1 %}
-<a href="#">Create an account</a>
+<a href="{% url 'create_account' %}">Create an account</a>
+{%endblock%}
+
+{% block bodyblock %}
+Click on the sidebar for further functions!
 {%endblock%}

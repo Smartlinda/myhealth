@@ -11,22 +11,29 @@ def populate():
 
 ## making a superuser
 
-    User = get_user_model()
+    # User = get_user_model()
 
-    email = 'xiong199704242@gmail.com'
-    password = 'asdfghjkl'
-    user_type = 5
-
-    super = User.objects.create_superuser(email, password, user_type)
+    # email = 'xiong199704242@gmail.com'
+    # password = 'asdfghjkl'
+    # user_type = 5
+    #
+    # super = User.objects.create_superuser(email, password, user_type)
+    # s_super = Staff.objects.get_or_create(user=super)
 
     # making some new users for fun
 
-    doc = User.objects.create_user(email='jlennon@beatles.com',password='glassonion',user_type=1)
+    doc = User.objects.create_user(email='jlennon@beatles.com',password='glassdoor',user_type=1)
+    s_doc = Staff.objects.get_or_create(user=doc)
     conduc = User.objects.create_user(email='donald@trump.com',password='billions',user_type=2)
+    s_conduc = Staff.objects.get_or_create(user=conduc)
     recep = User.objects.create_user(email='dragrace@vh1.com',password='kittygirl',user_type=3)
-    patient1 = User.objects.create_user(email='linda@xiong.com',password='linda',user_type=4)
-    patient2 = User.objects.create_user(email='adam@burae.com',password='adam',user_type=4)
-    patient3 = User.objects.create_user(email='John@sugerman.com',password='john',user_type=4)
+    s_recep = Staff.objects.get_or_create(user=recep)
+    patient1 = User.objects.create_user(email='linda@xiong.com',password='lindaxiong',user_type=4)
+    p_patient1 = Patient.objects.get_or_create(user=patient1)
+    patient2 = User.objects.create_user(email='adam@burae.com',password='adamsmith',user_type=4)
+    p_patient2 = Patient.objects.get_or_create(user=patient2)
+    patient3 = User.objects.create_user(email='John@sugerman.com',password='johnjohnson',user_type=4)
+    p_patient3 = Patient.objects.get_or_create(user=patient3)
 
 
     # making examples for Department

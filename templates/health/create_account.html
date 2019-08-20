@@ -1,0 +1,49 @@
+{% extends 'health/base.html' %}
+{% load static %}
+{% block topic1 %}
+<a href="{% url 'create_account' %}">Create an account</a>
+{%endblock%}
+{% block bodyblock %}
+<h2>Create an account</h2>
+<div class="wrapper">
+  <form id="user_form" method="post" >
+    {% csrf_token %}
+    {{ form.as_p }}
+    <!-- First name:<br>
+    <input type="text" name="firstname"><br>
+    Last name:<br>
+    <input type="text" name="lastname"><br>
+    E-mail:<br>
+    <input type="email" name="email"><br>
+    Password:<br>
+    <input type="password" name="psw"><br>
+    User Type:<br>
+    <select name="usertype">
+      <option value=1>Doctor</option>
+      <option value=2>Lab People</option>
+      <option value=3>Receptionist</option>
+      <option value=4>Patient</option>
+      <option value=5>Administration</option>
+    </select><br>
+  </form>
+  <form id="profile_form" method="post" action="/health/edit_profile/">
+    Sex:<br>
+    <select name="sex">
+      <option value=True>Female</option>
+      <option value=False>Male</option>
+    </select><br>
+    Telephone:<br>
+    <input type="tel" name="phone" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"><br>
+    Department:<br>
+    <input type="text" name="department"><br>
+    Hospital:<br>
+    <input type="text" name="hospital"><br>
+    Birthday:<br>
+    <input type="date" name="bday"><br>
+    Address:<br>
+    <input type="text" name="address"><br> -->
+    <input type="submit" name="submit">
+
+  </form>
+</div>
+{%endblock%}

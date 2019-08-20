@@ -23,19 +23,24 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
-
     objects = CustomUserManager()
+    # id = models.AutoField(primary_key=True)
 
     USER_TYPE_CHOICES = (
-      (1, 'doctor'),
-      (2, 'labPeople'),
-      (3, 'receptionist'),
-      (4, 'patient'),
-      (5, 'admin'),
+      (1, 'Doctor'),
+      (2, 'Lab People'),
+      (3, 'Receptionist'),
+      (4, 'Patient'),
+      (5, 'Administration'),
     )
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES,null=True)
+    sex = models.BooleanField(blank=True, null=True)
+    tel_no = models.CharField(max_length=255, blank=True, null=True)
+    dob = models.DateField(db_column='DOB', blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['user_type',]
 
     def __str__(self):
         return self.email
@@ -43,33 +48,33 @@ class User(AbstractUser):
   #       db_table = 'auth_user'
 
 class Staff(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name='staff')
-    user_id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    fname = models.CharField(max_length=255, blank=True, null=True)
-    lname = models.CharField(max_length=255, blank=True, null=True)
-    sex = models.BooleanField(blank=True, null=True)
-    tel_no = models.CharField(max_length=255, blank=True, null=True)
-    email = models.EmailField(max_length=255,unique=True)
+    id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True,related_name='staff')
+    # staff_id = models.IntegerField()
     department = models.ForeignKey('Department', on_delete=models.CASCADE, db_column='department', blank=True, null=True)
     hospital = models.ForeignKey('Hospital', on_delete=models.CASCADE, db_column='hospital', blank=True, null=True)
+    # fname = models.CharField(max_length=255, blank=True, null=True)
+    # lname = models.CharField(max_length=255, blank=True, null=True)
+    # sex = models.BooleanField(blank=True, null=True)
+    # tel_no = models.CharField(max_length=255, blank=True, null=True)
+    # email = models.EmailField(max_length=255,unique=True)
 
     class Meta:
-        managed = False
         db_table = 'Staff'
 
 class Patient(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name='pat')
-    email = models.EmailField(max_length=255,unique=True)
-    fname = models.CharField(max_length=255, blank=True, null=True)
-    lname = models.CharField(max_length=255, blank=True, null=True)
-    dob = models.DateField(db_column='DOB', blank=True, null=True)  # Field name made lowercase.
-    sex = models.BooleanField(blank=True, null=True)
-    tel_no = models.CharField(max_length=255,blank=True,null=True)
-    address = models.CharField(max_length=255, blank=True, null=True)
-    nin = models.AutoField(db_column='NIN', primary_key=True)  # Field name made lowercase.
+    nin = models.AutoField(db_column='NIN', primary_key=True)
+    # email = models.EmailField(max_length=255,unique=True)
+    # fname = models.CharField(max_length=255, blank=True, null=True)
+    # lname = models.CharField(max_length=255, blank=True, null=True)
+    # dob = models.DateField(db_column='DOB', blank=True, null=True)  # Field name made lowercase.
+    # sex = models.BooleanField(blank=True, null=True)
+    # tel_no = models.CharField(max_length=255,blank=True,null=True)
+    # address = models.CharField(max_length=255, blank=True, null=True)
+
 
     class Meta:
-        managed = False
         db_table = 'Patient'
 
 class Department(models.Model):
@@ -79,7 +84,6 @@ class Department(models.Model):
     tel_no = models.CharField(max_length=255)
 
     class Meta:
-        managed = False
         db_table = 'Department'
 
 
@@ -87,7 +91,6 @@ class Disease(models.Model):
     name = models.CharField(max_length=255,primary_key=True)
 
     class Meta:
-        managed = False
         db_table = 'Disease'
 
 
@@ -97,7 +100,6 @@ class Ehr(models.Model):
     amount = models.IntegerField()
 
     class Meta:
-        managed = False
         db_table = 'EHR'
 
 @receiver(m2m_changed, sender=Ehr.medicalsupply.through)
@@ -117,7 +119,6 @@ class Hospital(models.Model):
     address = models.CharField(max_length=255)
 
     class Meta:
-        managed = False
         db_table = 'Hospital'
 
 
@@ -130,7 +131,6 @@ class LabTest(models.Model):
     report = models.FileField(upload_to='lab_report',blank=True)
 
     class Meta:
-        managed = False
         db_table = 'Lab test'
 
 
@@ -140,7 +140,6 @@ class MedicalSupply(models.Model):
     stock = models.IntegerField(default=0)
 
     class Meta:
-        managed = False
         db_table = 'Medical supply'
 
 
@@ -149,7 +148,6 @@ class Order(models.Model):
     datetime = models.DateTimeField()
 
     class Meta:
-        managed = False
         db_table = 'Order'
 
 
@@ -159,7 +157,6 @@ class Orderdetail(models.Model):
     amount = models.IntegerField()
 
     class Meta:
-        managed = False
         db_table = 'OrderDetail'
         unique_together = (('orderid', 'medicalsupply'),)
 
@@ -172,7 +169,6 @@ class Phr(models.Model):
     disease = models.ForeignKey('Disease', on_delete=models.CASCADE, db_column='disease')
 
     class Meta:
-        managed = False
         db_table = 'PHR'
 
 
@@ -184,24 +180,22 @@ class Schedule(models.Model):
     waiting_time = models.TimeField(db_column='waiting time',blank=True,null=True)  # Field renamed to remove unsuitable characters.
 
     class Meta:
-        managed = False
         db_table = 'Schedule'
 
-@receiver(post_save, sender=User)
-def create_s_or_p(sender, instance, created, **kwargs):
-    Staff.objects.filter(email = 'xiong199704242@163.com').delete()
-    Staff.objects.filter(email = 'xiong199704242@gmail.com').delete()
-	# print('****', created)
-	if instance.user_type in set([1,2,3,5]):
-        Staff.objects.create(user = instance,user_id = instance.id,email=instance.email,fname=instance.first_name,lname=instance.last_name)
-    else:
-        Patient.objects.get_or_create(user = instance,email=instance.email,fname=instance.first_name,lname=instance.last_name)
-
-@receiver(post_save, sender=User)
-def save_sp_profile(sender, instance, **kwargs):
-    print('_-----')
-    if instance.user_type in set([1,2,3,5]):
-        instance.staff.save()
-    else:
-		# Patient.objects.get_or_create(user = instance,email=instance.email,fname=instance.first_name,lname=instance.last_name)
-        instance.pat.save()
+# @receiver(post_save, sender=User)
+# def create_s_or_p(sender, instance, created, **kwargs):
+#     # Staff.objects.filter(email = 'xiong199704242@163.com').delete()
+#     # Staff.objects.filter(email = 'xiong199704242@gmail.com').delete()
+#     if instance.user_type in set([1,2,3,5]):
+#         Staff.objects.get_or_create(user = instance)
+#     else:
+#         Patient.objects.get_or_create(user = instance)
+#
+# @receiver(post_save, sender=User)
+# def save_sp_profile(sender, instance, **kwargs):
+#     print('_-----')
+#     if instance.user_type in set([1,2,3,5]):
+#         instance.staff.save()
+#     else:
+#     # Patient.objects.get_or_create(user = instance,email=instance.email,fname=instance.first_name,lname=instance.last_name)
+#         instance.pat.save()
