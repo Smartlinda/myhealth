@@ -43,7 +43,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'health',
+    'django.contrib.sites',
+    #my app
+    'health.apps.HealthConfig',
+    #3rd party app
+    'allauth', # for logging in
+    'allauth.account', # for logging in
+    'allauth.socialaccount',
 ]
 
 MIDDLEWARE = [
@@ -61,7 +67,7 @@ ROOT_URLCONF = 'myhealth.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,13 +89,17 @@ WSGI_APPLICATION = 'myhealth.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'asdfghjkl',
-        'HOST': 'localhost',
-        'PORT': '5433',
-    },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'postgres',
+    #     'USER': 'postgres',
+    #     'PASSWORD': 'asdfghjkl',
+    #     'HOST': 'localhost',
+    #     'PORT': '5433',
+    # },
     # 'health_data': {   # this is the legacy database
     #     'ENGINE': 'django.db.backends.postgres',
     #     'NAME': 'health',
@@ -135,6 +145,31 @@ USE_L10N = True
 USE_TZ = True
 
 AUTH_USER_MODEL = 'health.User'  #Substitute the default Django User model
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+SITE_ID = 1
+
+ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_SIGNUP_FORM_CLASS = "health.forms.SignupForm"
+ACCOUNT_ADAPTER = 'myhealth.users.adaptor.MyAccountAdapter'
+# LOGIN_REDIRECT_URL = 'signup/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 STATICFILES_DIRS = [STATIC_DIR]

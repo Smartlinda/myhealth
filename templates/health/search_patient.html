@@ -1,0 +1,25 @@
+{% extends 'health/base.html' %}
+{% load static %}
+{% block topic1 %}
+<a href="{% url 'doc_schedule' %}">Schedule</a>
+{%endblock%}
+
+{% block topic2 %}
+<a href="{% url 'search_patient' %}">Search patient</a>
+{%endblock%}
+
+<!-- {% block topic3 %}
+<a href="{% url 'doc_EHR' %}">View patient's EHR</a>
+{%endblock%} -->
+
+{% block bodyblock %}
+<div class="search">
+  <form method="GET" action="{% url 'patient_result' %}">
+    <h3 class="names">Type patient's full name here</h3>
+    <h3>You can access Patient's EHR from here</h3>
+    <input class="field" name="q" value="{{request.GET.q}}" placeholder="" type="text">
+    <button class="btn btn-md btn-primary" type="submit">Search</button>
+  </form>
+</div>
+
+{%endblock%}

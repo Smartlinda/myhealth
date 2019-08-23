@@ -13,5 +13,18 @@
 {%endblock%} -->
 
 {% block bodyblock %}
-Click on the sidebar for further functions!
+{% if result %}
+  {% for i in results %}
+  <a href="{% url 'doc_show_spePaEHR' %}">
+    <div class="panel panel-success">
+      <div class="panel-heading"></div>
+      <div class="panel-body">
+        {{i.first_name}}{{i.last_name}}<br>
+        {{i.sex}}{{i.dob}}{{i.email}}<br>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+{% endif %}
+
 {%endblock%}

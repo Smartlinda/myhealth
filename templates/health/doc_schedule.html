@@ -1,0 +1,33 @@
+{% extends 'health/base.html' %}
+{% load static %}
+{% block headblock %}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <!-- make panel clickable -->
+  <script src="{% static "js/schedule_panel.js" %}"></script>
+  <link href="{% static "css/schedule_panel.css" %}" rel="stylesheet">
+{% endblock %}
+{% block topic1 %}
+<a href="{% url 'doc_schedule' %}">Schedule</a>
+{%endblock%}
+
+{% block topic2 %}
+<a href="{% url 'search_patient' %}">Search patient</a>
+{%endblock%}
+
+{% block bodyblock %}
+{% if appoints %}
+  {% for i in appoints %}
+    <div class="panel panel-success">
+      <div class="panel-heading">Appointment</div>
+      <div class="panel-body">
+        Patient: {{i.select_related('patient__user___first_name')}}{{i.select_related('patient__user___last_name')}}<br>
+        Doctor: {{i.select_related('doctorid__user___first_name')}}{{select_related('doctorid__user___last_name')}}<br>
+        Time: {{i.time}}
+      </div>
+    </div>
+  {% endfor %}
+{% endif %}
+{%endblock%}

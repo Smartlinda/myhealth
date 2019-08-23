@@ -5,9 +5,16 @@
 {%endblock%}
 
 {% block topic2 %}
-<a href="{% url 'doc_EHR' %}">View patient's EHR</a>
+<a href="{% url 'search_patient' %}">Search patient</a>
 {%endblock%}
 
 {% block bodyblock %}
-Click on the sidebar for further functions!
+{% if schedule %}
+
+  <ul>
+  {% for s in schedule %}
+    <li><a href="{% url 'edit_schedule' s.patient=patient %}">{{s.date}}{{s.time}}</a></li>
+  {% endfor %}
+  </ul>
+{% endif %}
 {%endblock%}
