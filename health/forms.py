@@ -2,6 +2,7 @@ from django import forms
 from health.models import User, Department, Disease, Ehr,Hospital,LabTest
 from health.models import MedicalSupply,Order,Orderdetail,Phr,Schedule
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth import get_user_model
 
 class CustomUserCreationForm(UserCreationForm):
 
@@ -46,6 +47,10 @@ class SignupForm(forms.ModelForm):
         model = User
         fields = ('email','user_type','first_name','last_name','sex','tel_no','dob','address',)
 
+class NoteForm(forms.ModelForm):
+    class Meta:
+        model = Schedule
+        fields = ('sysmptoms','treatment','prescriptions','diagnosis',)
 
 
 class DepartmentForm(forms.ModelForm):
@@ -76,10 +81,17 @@ class HospitalForm(forms.ModelForm):
 
 class LabTestForm(forms.ModelForm):
     name = forms.CharField(max_length=255)
-    report = forms.FileField()
+    report = forms.FileField(required=False)
+    conductor = forms.ModelChoiceField(queryset=get_user_model().objects,required=False)
     class Meta:
         model = LabTest
-        exclude = ('patient','doctor','conductor',)
+        exclude = ('id','done',)
+
+class ReportForm(forms.ModelForm):
+
+    class Meta:
+        model = LabTest
+        fields = ('report',)
 
 class MedicalSupplyForm(forms.ModelForm):
     name = forms.CharField(max_length=255)

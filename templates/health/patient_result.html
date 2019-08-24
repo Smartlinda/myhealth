@@ -8,23 +8,21 @@
 <a href="{% url 'search_patient' %}">Search patient</a>
 {%endblock%}
 
-<!-- {% block topic3 %}
-<a href="{% url 'doc_EHR' %}">View patient's EHR</a>
-{%endblock%} -->
 
 {% block bodyblock %}
 {% if result %}
-  {% for i in results %}
-  <a href="{% url 'doc_show_spePaEHR' %}">
+  {% for i in result %}
+  <a href="{% url 'doc_schedule_result' i.id %}">
     <div class="panel panel-success">
-      <div class="panel-heading"></div>
+      <div class="panel-heading">{{i.first_name}}{{i.last_name}}</div>
       <div class="panel-body">
-        {{i.first_name}}{{i.last_name}}<br>
         {{i.sex}}{{i.dob}}{{i.email}}<br>
       </div>
     </div>
   </a>
   {% endfor %}
+{%else%}
+  There are no patients match your search
 {% endif %}
 
 {%endblock%}

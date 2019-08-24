@@ -18,11 +18,13 @@
   {% block topic2 %}{%endblock%}
   {% block topic3 %}{%endblock%}
   {% block topic4 %}{%endblock%}
+  {% block topic5 %}{%endblock%}
 </div>
 
 <div id="main">
   <button class="openbtn" onclick="openNav()">&#9776; Toggle Sidebar</button>
   <h2>Hi! {{current.first_name}}</h2>
+  <p><a href="{% url 'account_logout' %}">logout</a></p>
   <p>{% block bodyblock %}{%endblock%}</p>
 </div>
 

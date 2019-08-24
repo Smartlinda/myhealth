@@ -1,0 +1,20 @@
+{% extends 'health/dochome.html' %}
+
+{% block bodyblock %}
+<form method="post" >
+  {% csrf_token %}
+  <div>
+    Patient:{{form.patient}}<br>
+    Doctor:{{form.doctor}}<br>
+    Name:{{form.name}}<br>
+  </div>
+  <input type="submit" value="Submit" />
+</form>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{%endblock%}

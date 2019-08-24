@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'allauth', # for logging in
     'allauth.account', # for logging in
     'allauth.socialaccount',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -167,7 +168,8 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SIGNUP_FORM_CLASS = "health.forms.SignupForm"
 ACCOUNT_ADAPTER = 'myhealth.users.adaptor.MyAccountAdapter'
 # LOGIN_REDIRECT_URL = 'signup/'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'
+LOGOUT_REDIRECT_URL = 'user_login'
+ACCOUNT_LOGOUT_ON_GET = True
 # ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 # Static files (CSS, JavaScript, Images)

@@ -16,6 +16,7 @@ from django.dispatch import receiver
 from django.db.utils import IntegrityError
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+from django.core.validators import FileExtensionValidator
 
 
 class User(AbstractUser):
@@ -141,11 +142,12 @@ class Hospital(models.Model):
 
 class LabTest(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    done = models.BooleanField(default=False)
     patient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='patient')
     doctor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='doctor',related_name='doc')
-    name = models.CharField(max_length=255)
-    conductor = models.ForeignKey(settings.AUTH_USER_MODEL, models.DO_NOTHING, db_column='conductor',related_name='conduct')
-    report = models.FileField(upload_to='lab_report',blank=True)
+    name = models.CharField(max_length=255,null=True,blank=True)
+    conductor = models.ForeignKey(settings.AUTH_USER_MODEL, models.DO_NOTHING, db_column='conductor',related_name='conduct',null=True,blank=True)
+    report = models.FileField(upload_to='report/',validators=[FileExtensionValidator(allowed_extensions=['pdf'])],null=True,blank=True)
 
     class Meta:
         db_table = 'Lab test'
@@ -208,7 +210,10 @@ class Schedule(models.Model):
     time = models.TimeField(default = timezone.now)
     doctorid = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='doctorID', blank=True, null=True,related_name='sche_doc')
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    notes = models.CharField(max_length=255,blank=True, null=True)
+    sysmptoms = models.TextField(max_length=65535,blank=True, null=True)
+    diagnosis = models.TextField(max_length=65535,blank=True, null=True)
+    prescriptions = models.TextField(max_length=65535,blank=True, null=True)
+    treatment = models.TextField(max_length=65535,blank=True, null=True)
     waiting_time = models.TimeField(db_column='waiting time',blank=True,null=True)  # Field renamed to remove unsuitable characters.
 
     class Meta:

@@ -1,5 +1,6 @@
 {% extends 'health/base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 {% block topic1 %}
 <a href="{% url 'doc_schedule' %}">Schedule</a>
 {%endblock%}
@@ -9,5 +10,28 @@
 {%endblock%}
 
 {% block bodyblock %}
-Click on the sidebar for further functions!
+<h2> {{patient.first_name}} {{patient.last_name}}'s schedule on {{schedule.date}}</h2>
+<div>
+
+  <form method="post" action=".">{% csrf_token %}
+    <h4>Notes</h4>
+    <div>
+      {% for field in form.visible_fields %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field|add_class:'form-control' }}
+          {% for error in field.errors %}
+            <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  </form>
+
+  <div>
+    <h4>Request a Lab</h4>
+    <form action="{% url 'request_lab' schedule.id %}">
+      <input type="submit" value="Request" />
+    </form>
+  </div>
 {%endblock%}

@@ -1,0 +1,55 @@
+{% extends 'health/base.html' %}
+{% load static %}
+
+{% block headblock %}
+<style>
+.box {
+  background-color: grey;
+  width: 400px;
+  border: 0px solid white;
+  padding: 20px;
+  margin: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+.list {
+  text-align:center
+}
+</style>
+{% endblock %}
+
+{% block topic1 %}
+<a href="{% url 'show_test' %}">Test to do</a>
+{%endblock%}
+
+{% block bodyblock %}
+{% if tests %}
+  {% for i in tests %}
+  <div class="list">
+  <a href="{% url 'upload_result' i.id %}">
+    <div class="box" style="text-align:center">
+      Test name:<br>
+      {{i.name}}<br>
+      <br>
+      Requested Doctor:
+      <br>{{i.doctor}}<br>
+      <br>
+      Patient:<br>
+      {{i.patient}}<br>
+      <br>
+      Status:
+      {% if i.done == 'True' %}
+        Finished
+      {% else %}
+        Ongoing
+      {% endif %}
+    </div>
+    <div></div>
+  </a>
+  </div>
+  {% endfor %}
+{%else%}
+  There are no patients match your search
+{% endif %}
+{%endblock%}

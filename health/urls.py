@@ -11,7 +11,7 @@ urlpatterns = [
     path('doc/schedule/',views.doc_schedule,name='doc_schedule'),
     path('doc/search_patient/',views.search_patient,name='search_patient'),
     path('doc/patient_result/',views.patient_result,name='patient_result'),
-    path('doc/pasche/<int:patient>/',views.doc_schedule_result,name='doc_EHR'),
+    path('doc/pasche/<int:patient>/',views.doc_schedule_result,name='doc_schedule_result'),
     path('doc/edit_schedule/<int:scheduleID>/',views.edit_schedule,name='edit_schedule'),
     #??? should i put <int:nin> here? or sth else?
     path('doc/request_lab/<int:schedule>/',views.request_lab,name='request_lab'),
@@ -23,9 +23,10 @@ urlpatterns = [
     path('admini/create_account/', views.create_account, name='create_account'),
     path('patient/book_appoint/', views.patient_book_appoint, name='patient_book'),
     path('patient/cancel_appoint/', views.patient_cancel_appoint, name='patient_cancel'),
-    path('patient/schedule/<int:nin>/', views.patient_show_schedule, name='patient_EHR'),
+    path('patient/schedule/<int:nin>/', views.patient_show_schedule, name='patient_schedule'),
     path('patient/schedule_detail/<int:schedule>/', views.patient_scheDetail, name='patient_scheDetail'),
-    path('patient/edit_PHR/<int:nin>/', views.edit_PHR, name='edit_EHR'),
+    path('patient/PHR/<int:nin>/', views.myPHR, name='myPHR'),
+    path('patient/edit_PHR/<int:nin>/', views.edit_PHR, name='edit_PHR'),
     # path('accounts/', include('django.contrib.auth.urls')),
 
 ]
