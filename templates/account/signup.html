@@ -77,6 +77,14 @@
     </div>
     <input type="submit" name="submit">
 
+    <script>
+    $(function () {
+      $("#id_date").datepicker({
+        format:'dd/mm/yyyy',
+      });
+    });
+    </script>
+
   </form>
 </div>
 {%endblock%}
