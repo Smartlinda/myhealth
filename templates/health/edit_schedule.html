@@ -1,6 +1,17 @@
 {% extends 'health/base.html' %}
 {% load static %}
 {% load widget_tweaks %}
+
+{% block headblock %}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <!-- make panel clickable -->
+  <script src="{% static "js/schedule_panel.js" %}"></script>
+  <link href="{% static "css/schedule_panel.css" %}" rel="stylesheet">
+{% endblock %}
+
 {% block topic1 %}
 <a href="{% url 'doc_schedule' %}">Schedule</a>
 {%endblock%}
@@ -13,7 +24,8 @@
 <h2> {{patient.first_name}} {{patient.last_name}}'s schedule on {{schedule.date}}</h2>
 <div>
 
-  <form method="post" action=".">{% csrf_token %}
+  <form method="post" action=".">
+    {% csrf_token %}
     <h4>Notes</h4>
     <div>
       {% for field in form.visible_fields %}
@@ -25,6 +37,11 @@
           {% endfor %}
         </div>
       {% endfor %}
+      Sysmptoms: {{schedule.sysmptoms}}<br>
+      Diagnosis{{schedule.diagnosis}}<br>
+      Prescriptions: {{schedule.prescriptions}}<br>
+      Treatment: {{schedule.treatment}}<br>
+      <input type="submit" value="Update" />
     </div>
   </form>
 
@@ -33,5 +50,30 @@
     <form action="{% url 'request_lab' schedule.id %}">
       <input type="submit" value="Request" />
     </form>
+  </div>
+  <div>
+
+    {% if lab %}
+      <h4>Lab result</h4>
+      {% for l in lab %}
+      <div class="panel panel-default">
+        <div class="panel-heading">Appointment</div>
+        <div class="panel-body" style="text-align:center">
+          Name: {{l.name}}<br>
+          Conductor: {{l.conductor}}<br>
+          Report: {{l.report}}
+          {% if l.report %}
+          <p><a href="{{l.report.url}}">Download</a></p><br>
+          {% endif %}
+          Status:
+          {% if l.done %}
+          Done
+          {% else %}
+          Ongoing
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    {% endif %}
   </div>
 {%endblock%}

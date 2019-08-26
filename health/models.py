@@ -7,7 +7,6 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from .managers import CustomUserManager
 from django.conf import settings
 from django.dispatch import receiver
 from django.db.models.signals import post_save
@@ -20,13 +19,6 @@ from django.core.validators import FileExtensionValidator
 
 
 class User(AbstractUser):
-
-    #use email as authentication
-    # username = None
-    # email = models.EmailField(_('email address'), unique=True)
-
-    # objects = CustomUserManager()
-    # id = models.AutoField(primary_key=True)
 
     USER_TYPE_CHOICES = (
       (1, 'Doctor'),
@@ -46,35 +38,11 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['user_type','email',]
 
     def __str__(self):
-        return self.email
+        return self.first_name + " " + self.last_name
 
     def get_absolute_url(self):
         return "/health/%i/" % (self.pk)
-  # class Meta:
-  #       db_table = 'auth_user'
 
-# class Staff(models.Model):
-#     user = models.OneToOneField(settings.AUTH_USER_MODEL,primary_key=True,on_delete=models.CASCADE,related_name='staff')
-#     department = models.ForeignKey('Department', on_delete=models.CASCADE, db_column='department', blank=True, null=True)
-#     hospital = models.ForeignKey('Hospital', on_delete=models.CASCADE, db_column='hospital', blank=True, null=True)
-#
-#     class Meta:
-#         db_table = 'Staff'
-#
-# class Patient(models.Model):
-#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name='pat',primary_key=True)
-#     # nin = models.AutoField(db_column='NIN', primary_key=True)
-#     # email = models.EmailField(max_length=255,unique=True)
-#     # fname = models.CharField(max_length=255, blank=True, null=True)
-#     # lname = models.CharField(max_length=255, blank=True, null=True)
-#     # dob = models.DateField(db_column='DOB', blank=True, null=True)  # Field name made lowercase.
-#     # sex = models.BooleanField(blank=True, null=True)
-#     # tel_no = models.CharField(max_length=255,blank=True,null=True)
-#     # address = models.CharField(max_length=255, blank=True, null=True)
-#
-#
-#     class Meta:
-#         db_table = 'Patient'
 
 class Department(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
@@ -114,16 +82,6 @@ class Ehr(models.Model):
         # do something with the book
         return ehr
 
-# @receiver(m2m_changed, sender=Ehr.medicalsupply.through)
-# def verify_uniqueness(sender, **kwargs):
-#     ehr = kwargs.get('instance', None)
-#     action = kwargs.get('action', None)
-#     medicalsupply = kwargs.get('pk_set', None)
-#
-#     if action == 'pre_add':
-#         for ms in medicalsupply:
-#             if Ehr.objects.filter(schedule=ehr.schedule).filter(medicalsupply=ms):
-#                 raise IntegrityError('The same prescription has been issued in this appointment.')
 
 class Hospital(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
@@ -197,17 +155,18 @@ class Phr(models.Model):
     weight = models.DecimalField(max_digits=65535, decimal_places=2, blank=True, null=True)
     height = models.DecimalField(max_digits=65535, decimal_places=2, blank=True, null=True)
     doctorid = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='doctorID', blank=True, null=True,related_name='phr_doc')  # Field name made lowercase.
-    disease = models.ForeignKey('Disease', on_delete=models.CASCADE, db_column='disease')
+    disease = models.ForeignKey('Disease', on_delete=models.CASCADE, db_column='disease', blank=True, null=True)
 
     class Meta:
         db_table = 'PHR'
 
 
 class Schedule(models.Model):
-    checked_in = models.BooleanField(default=False)
-    patient = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='patient',related_name='sche_pat')
-    date = models.DateField(default = timezone.now)  # Field renamed to remove unsuitable characters.
-    time = models.TimeField(default = timezone.now)
+    checked_in = models.BooleanField(default=False)  #whether the patient has checked in or not
+    booked = models.BooleanField(default=False)
+    patient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='patient',blank=True,null=True,related_name='sche_pat')
+    date = models.DateField(blank=True,null=True)  # Field renamed to remove unsuitable characters.
+    time = models.TimeField(blank=True,null=True)
     doctorid = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='doctorID', blank=True, null=True,related_name='sche_doc')
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     sysmptoms = models.TextField(max_length=65535,blank=True, null=True)
@@ -224,21 +183,3 @@ class Schedule(models.Model):
         schedule = cls(checked_in=checked_in,patient=patient,date=date,time=time,doctorid=doctorid)
         # do something with the book
         return schedule
-
-# @receiver(post_save, sender=User)
-# def create_s_or_p(sender, instance, created, **kwargs):
-#     # Staff.objects.filter(email = 'xiong199704242@163.com').delete()
-#     # Staff.objects.filter(email = 'xiong199704242@gmail.com').delete()
-#     if instance.user_type in set([1,2,3,5]):
-#         Staff.objects.get_or_create(user = instance)
-#     else:
-#         Patient.objects.get_or_create(user = instance)
-#
-# @receiver(post_save, sender=User)
-# def save_sp_profile(sender, instance, **kwargs):
-#     print('_-----')
-#     if instance.user_type in set([1,2,3,5]):
-#         instance.staff.save()
-#     else:
-#     # Patient.objects.get_or_create(user = instance,email=instance.email,fname=instance.first_name,lname=instance.last_name)
-#         instance.pat.save()

@@ -12,28 +12,26 @@ from health.models import User, Department, Disease, Ehr,Hospital,LabTest
 from health.models import MedicalSupply,Order,Orderdetail,Phr,Schedule
 import datetime
 from django.db.models import Q
-from django.contrib import messages
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
+
 from time import sleep
 from django.db import IntegrityError, transaction
 
 #homepage after receptionist logs in
-def recephome(request,id):
+@login_required
+def recephome(request):
     context_dict = {}
-    current_user = User.objects.get(id=id)
-    context_dict['current'] = current_user
+    user = request.user
+    context_dict['current'] = user
     response = render(request, 'health/recephome.html', context_dict)
 
     return response
 
-#homepage after admin log in
-def adminhome(request):
-    context_dict = {}
-    context_dict['current'] = request.user
-    response = render(request, 'account/adminhome.html', context_dict)
-
-    return response
 
 #homepage after doctor log in
+@login_required
 def dochome(request):
     context_dict = {}
     context_dict['current'] = request.user
@@ -42,6 +40,7 @@ def dochome(request):
     return response
 
 #homepage after lab person log in
+@login_required
 def labhome(request):
     context_dict = {}
     context_dict['current'] = request.user
@@ -50,6 +49,7 @@ def labhome(request):
     return response
 
 #homepage after patient log in
+@login_required
 def patienthome(request):
     context_dict = {}
     context_dict['current'] = request.user
@@ -61,36 +61,27 @@ def patienthome(request):
 def user_login(request):
     return redirect('login/')
 
-
-#FOR receptionist to see the schedule for the day
-def recep_schedule(request):
-    context_dict = {}
-    user = request.user
-    form = ScheduleForm
-    context_dict['current'] = user
-    context_dict['form'] = form
-    try:
-        appoints = Schedule.objects.filter(date=date.today()).order_by('time')
-        context_dict['appoints'] = appoints
-    except Schedule.DoesNotExist:
-        return redirect('recephome')
-
-    return render(request,'health/recep_schedule.html',context_dict)
+# class SignUp(CreateView):
+#     form_class = CustomUserCreationForm
+#     success_url = reverse_lazy('adminhome')
+#     template_name = 'signup.html'
 
 #FOR doctors to see the schedule for the day
+@login_required
 def doc_schedule(request):
     context_dict = {}
     user = request.user
     context_dict['current'] = user
     try:
-        appoints_today = Schedule.objects.filter(date=datetime.date.today()).filter(doctorid=user).order_by('time')
+        appoints_today = Schedule.objects.filter(doctorid=user).order_by('time')
         context_dict['appoints'] = appoints_today
     except Schedule.DoesNotExist:
         return HttpResponse("No schedule for today.")
 
     return render(request,'health/doc_schedule.html',context_dict)
 
-#for doctors to search the patient
+# search result of patient by doctor
+@login_required
 def patient_result(request):
     patient_list = User.objects.filter(user_type=4)
     query = request.GET.get('q')
@@ -102,12 +93,15 @@ def patient_result(request):
         context_dict['result'] = patient_list
     return render(request,'health/patient_result.html',context_dict)
 
+#for doctors to search the patient
+@login_required
 def search_patient(request):
     context_dict = {}
     context_dict['current'] = request.user
     return render(request,'health/search_patient.html',context_dict)
 
 #for doctors to view all the schedules related to that patient
+@login_required
 def doc_schedule_result(request,patient):
     context_dict = {}
     context_dict['current'] = request.user
@@ -124,38 +118,80 @@ def doc_schedule_result(request,patient):
 
     return render(request,'health/doc_EHR.html',context_dict)
 
+#FOR receptionist to see the schedule for the day
+@login_required
+def recep_schedule(request):
+    context_dict = {}
+    user = request.user
+    context_dict['current'] = user
+    try:
+        appoints = Schedule.objects.exclude(patient=None).order_by('date','time')
+        context_dict['appoints'] = appoints
+    except Schedule.DoesNotExist:
+        return redirect('recephome')
 
+    return render(request,'health/recep_schedule.html',context_dict)
+
+
+# for the patient to see all the appointments they booked
+@login_required
 def patient_show_schedule(request,nin):
     context_dict = {}
     user = request.user
     context_dict['current'] = user
     try:
         schedule = Schedule.objects.filter(patient=user)
-        context_dict['schedule'] = schedule
+        context_dict['appoints'] = schedule
     except Schedule.DoesNotExist:
         return HttpResponse("You don't have any appointment record with us.")
 
     return render(request,'health/patient_schedule.html',context_dict)
 
+#for the patient to view the notes left by the doctor
+@login_required
 def patient_scheDetail(request,schedule):
     context_dict = {}
+    user = request.user
+    context_dict['current'] = user
+    schedule = Schedule.objects.get(id=schedule)
+    context_dict['schedule'] = schedule
     return render(request,'health/pa_sche_detail.html',context_dict)
 
+#for patient to view his own body related index such as weight and height
+#patient can update the data as well
+@login_required
 def myPHR(request,nin):
     context_dict = {}
     user = request.user
-    context_dict['current'] = request.user
+    context_dict['current'] = user
+    labs = LabTest.objects.filter(patient=user)
+    context_dict['lab'] = labs
     schedules = Schedule.objects.filter(patient=user)
     context_dict['schedules'] = schedules
+    phr = Phr.objects.get_or_create(patient=user)[0]
+    context_dict['phr'] = phr
+    form = PhrForm({'patient':user})
+    if request.method == 'POST':
+        form = PhrForm(request.POST, instance=phr)
+        if form.is_valid():
+            form.save(commit=True)
+            return redirect('myPHR',user.id)
+        else:
+            print(form.errors)
+
+    context_dict['form'] = form
     return render(request,'health/myPHR.html',context_dict)
 
 #for doctors to add notes, enter prescriptions etc.
+@login_required
 def edit_schedule(request,scheduleID):
     context_dict = {}
     context_dict['current'] = request.user
     try:
         schedule = Schedule.objects.get(id=scheduleID)
         patient = schedule.patient
+        lab_test = LabTest.objects.filter(patient=patient).exclude(name=None)
+        context_dict['lab'] = lab_test
         context_dict['schedule'] = schedule
         context_dict['patient'] = patient
     except Schedule.DoesNotExist:
@@ -174,6 +210,7 @@ def edit_schedule(request,scheduleID):
     return render(request,'health/edit_schedule.html',context_dict)
 
 #for doctors to request a specific test for a patient
+@login_required
 def request_lab(request,schedule):
     context_dict = {}
     user = request.user
@@ -186,14 +223,14 @@ def request_lab(request,schedule):
         context_dict['patient'] = patient
     except Schedule.DoesNotExist:
         return redirect('edit_schedule',schedule.id)
-    lab = LabTest.objects.create(patient=patient,doctor=user,done=False)
+    lab = LabTest.objects.get_or_create(patient=patient,doctor=user,done=False)[0]
     context_dict['lab'] = lab
     lab_form = LabTestForm({'patient':patient, 'doctor':user})
     if request.method == 'POST':
         lab_form = LabTestForm(request.POST, instance=lab)
         if lab_form.is_valid():
             lab_form.save(commit=True)
-            messages.success(request, 'You have successfully requested a lab test.')
+
             return redirect('edit_schedule', schedule.id)
         else:
             print(lab_form.errors)
@@ -203,6 +240,7 @@ def request_lab(request,schedule):
     return render(request,'health/request_lab.html',context_dict)
 
 #for lab people to upload report of the test
+@login_required
 def upload_result(request,testID):
     context_dict = {}
     user = request.user
@@ -224,47 +262,90 @@ def upload_result(request,testID):
     return render(request,'health/upload_result.html',context_dict)
 
 #for receptionist to book appointments
+@login_required
 def recep_book_appoint(request):
     context_dict = {}
     context_dict['current'] = request.user
+    all_docs = User.objects.filter(user_type=1)
+    schedule = Schedule.objects.create()
+    form = ScheduleForm()
+    if request.method == 'POST':
+        form = ScheduleForm(request.POST, instance=schedule)
+        if form.is_valid():
+            form.save(commit=True)
+
+            return redirect('recephome')
+        else:
+            print(form.errors)
+
+    context_dict['form'] = form
+
     return render(request,'health/recep_book_appoint.html',context_dict)
 
 #for patients to book appointments
+@login_required
 def patient_book_appoint(request):
-    context_dict = {}
-    context_dict['current'] = request.user
-    return render(request,'health/patient_book_appoint.html',context_dict)
-
-#for receptionist to cancel appointments
-def recep_cancel_appoint(request):
-    context_dict = {}
-    context_dict['current'] = request.user
-    return render(request,'health/recep_cancel_appoint.html',context_dict)
-
-#for patients to cancel appointments
-def patient_cancel_appoint(request):
-    context_dict = {}
-    context_dict['current'] = request.user
-    return render(request,'health/patient_cancel_appoint.html',context_dict)
-
-
-#for admin to check the stock of all medical supplies
-# def view_stock(request):
-#     context_dict = {}
-#     return render(request,'health/view_stock.html',context_dict)
-
-#for admin to create an account for patients and staffs
-def create_account(request):
-    return redirect('/accounts/signup/')
-
-#for patient to edit info stored in PHR
-def edit_PHR(request):
     context_dict = {}
     user = request.user
     context_dict['current'] = user
-    return render(request,'health/edit_PHR.html',context_dict)
+    all_docs = User.objects.filter(user_type=1)
+    schedule = Schedule.objects.create()
+    form = ScheduleForm({'patient':user})
+    if request.method == 'POST':
+        form = ScheduleForm(request.POST, instance=schedule)
+        if form.is_valid():
+            form.save(commit=True)
+
+            return redirect('patienthome')
+        else:
+            print(form.errors)
+
+    context_dict['form'] = form
+
+    return render(request,'health/patient_book_appoint.html',context_dict)
+
+#for receptionist to cancel appointments
+@login_required
+def recep_cancel_appoint(request,scheduleID):
+    context_dict = {}
+    user = request.user
+    able = False
+    context_dict['current'] = user
+    try:
+        schedule = Schedule.objects.get(id=scheduleID)
+        context_dict['schedule'] = schedule
+    except Schedule.DoesNotExist:
+        return redirect('recep_schedule')
+    try:
+        schedule.delete()
+        return redirect('recep_schedule')
+    except:
+        pass
+    return render(request,'health/recep_schedule.html',context_dict)
+
+#for patients to cancel appointments
+@login_required
+def patient_cancel_appoint(request,scheduleID):
+    context_dict = {}
+    user = request.user
+    context_dict['current'] = user
+    able = False
+    try:
+        schedule = Schedule.objects.get(id=scheduleID)
+        context_dict['schedule'] = schedule
+    except Schedule.DoesNotExist:
+        return redirect('patient_show_schedule', user.id)
+    try:
+        schedule.delete()
+        return redirect('patient_show_schedule', user.id)
+    except:
+        pass
+
+
+    return render(request,'health/patient_schedule.html',context_dict)
 
 #for lab people to see what lab to do
+@login_required
 def show_test(request):
     context_dict = {}
     user = request.user

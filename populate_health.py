@@ -22,7 +22,8 @@ def populate():
     #
     # # making some new users for fun
     #
-    # doc = User.objects.signup(email='jlennon@beatles.com',password='glassdoor',user_type=1)
+    # doc1 = User.objects.signup(email='jlennon@beatles.com',password='glassdoor',user_type=1)
+    # doc2 = User.objects.signup(email='real@tech.com',password='beautyblender',user_type=1)
     # conduc = User.objects.signup(email='donald@trump.com',password='billions',user_type=2)
     # recep = User.objects.signup(email='dragrace@vh1.com',password='kittygirl',user_type=3)
     # patient1 = User.objects.create_user(email='linda@xiong.com',password='xiaotaoqi',user_type=4)

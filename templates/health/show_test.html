@@ -2,6 +2,13 @@
 {% load static %}
 
 {% block headblock %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<!-- make panel clickable -->
+<script src="{% static "js/schedule_panel.js" %}"></script>
+<link href="{% static "css/schedule_panel.css" %}" rel="stylesheet">
 <style>
 .box {
   background-color: grey;
@@ -24,29 +31,25 @@
 {%endblock%}
 
 {% block bodyblock %}
+<h2>Tests to do</h2>
 {% if tests %}
   {% for i in tests %}
-  <div class="list">
-  <a href="{% url 'upload_result' i.id %}">
-    <div class="box" style="text-align:center">
-      Test name:<br>
-      {{i.name}}<br>
-      <br>
-      Requested Doctor:
-      <br>{{i.doctor}}<br>
-      <br>
-      Patient:<br>
-      {{i.patient}}<br>
-      <br>
-      Status:
-      {% if i.done == 'True' %}
-        Finished
-      {% else %}
-        Ongoing
-      {% endif %}
+  <div class="panel panel-default">
+    <div class="panel-heading">Appointment</div>
+    <div class="panel-body" style="text-align:center">
+      <a href="{% url 'upload_result' i.id %}">
+        Test name: {{i.name}}<br>
+        Requested Doctor: {{i.doctor}}<br>
+        Patient: {{i.patient}}<br>
+        <br>
+        Status:
+        {% if i.done == 'True' %}
+          Finished
+        {% else %}
+          Ongoing
+        {% endif %}
+      </a>
     </div>
-    <div></div>
-  </a>
   </div>
   {% endfor %}
 {%else%}

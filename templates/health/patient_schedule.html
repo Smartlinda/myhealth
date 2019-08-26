@@ -1,11 +1,18 @@
 {% extends 'health/base.html' %}
 {% load static %}
+
+{% block headblock %}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <!-- make panel clickable -->
+  <script src="{% static "js/schedule_panel.js" %}"></script>
+  <link href="{% static "css/schedule_panel.css" %}" rel="stylesheet">
+{% endblock %}
+
 {% block topic1 %}
 <a href="{% url 'patient_book' %}">Book an appointment</a>
-{%endblock%}
-
-{% block topic2 %}
-<a href="{% url 'patient_cancel' %}">Cancel an appointment</a>
 {%endblock%}
 
 {% block topic3 %}
@@ -13,13 +20,24 @@
 {%endblock%}
 
 {% block topic4 %}
-<a href="{% url 'edit_PHR' current.id %}">Edit My PHR</a>
-{%endblock%}
-
-{% block topic5 %}
-<a href="{% url 'patient_schedule' current.id %}">My schedule</a>
+<a href="{% url 'patient_schedule' current.id %}">My appointment</a>
 {%endblock%}
 
 {% block bodyblock %}
-Click on the sidebar for further functions!
+<h2>My appointments</h2>
+{% if appoints %}
+  {% for s in appoints %}
+  <div class="panel panel-default">
+    <div class="panel-heading">Appointment</div>
+    <div class="panel-body" style="text-align:center">
+      <a href="{% url 'patient_scheDetail' s.id %}">
+      Doctor: {{s.doctorid.first_name}}{{s.doctorid.last_name}}<br>
+      Date: {{s.date}}<br>
+      Time: {{s.time}}<br>
+      <a href="{% url 'patient_cancel' s.id %}">Cancel</a>
+      </a>
+    </div>
+  </div>
+  {%endfor%}
+{%endif%}
 {%endblock%}

@@ -1,13 +1,27 @@
 {% extends 'health/dochome.html' %}
 {% load static %}
 
+{% block headblock %}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <!-- make panel clickable -->
+  <script src="{% static "js/schedule_panel.js" %}"></script>
+  <link href="{% static "css/schedule_panel.css" %}" rel="stylesheet">
+{% endblock %}
+
 {% block bodyblock %}
 {% if schedule %}
-
-  <ul>
   {% for s in schedule %}
-    <li><a href="{% url 'edit_schedule' s.id %}">{{s.date}}{{s.time}}</a></li>
+  <div class="panel panel-default">
+    <div class="panel-heading">Appointment</div>
+    <div class="panel-body" style="text-align:center">
+      <a href="{% url 'edit_schedule' s.id %}">
+      {{s.date}}{{s.time}}
+      </a>
+    </div>
+  </div>
   {% endfor %}
-  </ul>
 {% endif %}
 {%endblock%}

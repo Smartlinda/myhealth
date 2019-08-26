@@ -1,11 +1,17 @@
 {% extends 'health/base.html' %}
 {% load static %}
+{% load widget_tweaks %}
+
+{% block headblock%}
+
+<!-- CDN for widget_tweaks -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+{% endblock %}
+
 {% block topic1 %}
 <a href="{% url 'patient_book' %}">Book an appointment</a>
-{%endblock%}
-
-{% block topic2 %}
-<a href="{% url 'patient_cancel' %}">Cancel an appointment</a>
 {%endblock%}
 
 {% block topic3 %}
@@ -13,13 +19,68 @@
 {%endblock%}
 
 {% block topic4 %}
-<a href="{% url 'edit_PHR' current.id %}">Edit My PHR</a>
-{%endblock%}
-
-{% block topic5 %}
-<a href="{% url 'patient_schedule' current.id %}">My schedule</a>
+<a href="{% url 'patient_schedule' current.id %}">My appointment</a>
 {%endblock%}
 
 {% block bodyblock %}
-Click on the sidebar for further functions!
+<h2>My PHR</h2>
+<div>
+
+    <form method="post" action=".">
+      {% csrf_token %}
+      {% for field in form.visible_fields %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field|add_class:'form-control' }}
+        {% for error in field.errors %}
+          <span class="help-block">{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% endfor %}
+      <div class="form-group">
+      <button type="submit" class="btn btn-success">
+        <span class="glyphicon glyphicon-ok"></span> Update
+      </button><br>
+      Weight: {{phr.weight}} kg<br>
+      Height: {{phr.height}} cm<br>
+    </div>
+    </form>
+    <div>
+    <h2>Diagonsis from doctors</h2>
+    {% if schedules %}
+    hey
+    <ul>
+      {% for s in schedules %}
+        <li>{{s.diagnosis}}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    </div>
+    <div>
+
+    {% if lab %}
+      <h2>Lab result</h2>
+      {% for l in lab %}
+      <div class="panel panel-default">
+        <div class="panel-heading">Appointment</div>
+        <div class="panel-body" style="text-align:center">
+          Name: {{l.name}}<br>
+          Conductor: {{l.conductor}}<br>
+          Report: {{l.report}}
+          {% if l.report %}
+          <p><a href="{{l.report.url}}">Download</a></p><br>
+          {% endif %}
+          Status:
+          {% if l.done %}
+          Done
+          {% else %}
+          Ongoing
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    {% endif %}
+    </div>
+
+</div>
 {%endblock%}

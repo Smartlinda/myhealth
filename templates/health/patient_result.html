@@ -1,5 +1,16 @@
 {% extends 'health/base.html' %}
 {% load static %}
+
+{% block headblock %}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <!-- make panel clickable -->
+  <script src="{% static "js/schedule_panel.js" %}"></script>
+  <link href="{% static "css/schedule_panel.css" %}" rel="stylesheet">
+{% endblock %}
+
 {% block topic1 %}
 <a href="{% url 'doc_schedule' %}">Schedule</a>
 {%endblock%}
@@ -12,14 +23,23 @@
 {% block bodyblock %}
 {% if result %}
   {% for i in result %}
-  <a href="{% url 'doc_schedule_result' i.id %}">
-    <div class="panel panel-success">
-      <div class="panel-heading">{{i.first_name}}{{i.last_name}}</div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">{{i.first_name}} {{i.last_name}}</div>
       <div class="panel-body">
-        {{i.sex}}{{i.dob}}{{i.email}}<br>
+        <a href="{% url 'doc_schedule_result' i.id %}">
+        Date of Birth: {{i.dob}}<br>
+        Sex:
+        {% if i.sex == True %}
+        Female
+        {% else %}
+        Male
+        {% endif %}<br>
+        Email: {{i.email}}<br>
+        </a>
       </div>
     </div>
-  </a>
+
   {% endfor %}
 {%else%}
   There are no patients match your search

@@ -3,6 +3,8 @@ from health.models import User, Department, Disease, Ehr,Hospital,LabTest
 from health.models import MedicalSupply,Order,Orderdetail,Phr,Schedule
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import get_user_model
+from health.widgets import SelectTimeWidget
+from datetimewidget.widgets import DateWidget,TimeWidget
 
 class CustomUserCreationForm(UserCreationForm):
 
@@ -115,7 +117,7 @@ class OrderdetailForm(forms.ModelForm):
 class PhrForm(forms.ModelForm):
     class Meta:
         model = Phr
-        exclude = ('doctorid','disease',)
+        exclude = ('doctorid','disease','patient',)
 
 # class PatientForm(forms.ModelForm):
 #     class Meta:
@@ -124,8 +126,9 @@ class PhrForm(forms.ModelForm):
 
 class ScheduleForm(forms.ModelForm):
     # date = forms.DateTimeField(input_formats=['%Y-%m-%d %H:%M'])
-    date = forms.DateField(input_formats=['%Y-%m-%d'])
-    time = forms.TimeField(input_formats=['%H:%M'])
+    date = forms.DateField(input_formats=['%d/%m/%Y'])
+    time = forms.TimeField(widget=SelectTimeWidget(minute_step=15))
+    doctorid = forms.ModelChoiceField(label = 'Doctor',queryset=get_user_model().objects,required=False)
     class Meta:
         model = Schedule
-        exclude = ('id','checked_in',)
+        fields = ('patient','time','doctorid','date',)

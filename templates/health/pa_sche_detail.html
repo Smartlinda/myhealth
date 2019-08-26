@@ -1,0 +1,33 @@
+{% extends 'health/base.html' %}
+{% load static %}
+{% block topic1 %}
+<a href="{% url 'patient_book' %}">Book an appointment</a>
+{%endblock%}
+
+{% block topic3 %}
+<a href="{% url 'myPHR' current.id %}">My PHR</a>
+{%endblock%}
+
+{% block topic4 %}
+<a href="{% url 'patient_schedule' current.id %}">My appointment</a>
+{%endblock%}
+
+{% block bodyblock %}
+<h2>Schedule details</h2>
+<div style="text-align:center">
+{% if schedule %}
+    Date: {{schedule.date}}<br>
+    <br>
+    Doctor: {{schedule.doctorid.first_name}}{{schedule.doctorid.last_name}}<br>
+    <br>
+    Sysmptoms: {{schedule.sysmptoms}}<br>
+    <br>
+    Diagnosis: {{schedule.diagnosis}}<br>
+    <br>
+    Prescriptions: {{schedule.prescriptions}}<br>
+    <br>
+    Treatment: {{schedule.treatment}}<br>
+    <br>
+{% endif %}
+</div>
+{%endblock%}

@@ -4,20 +4,12 @@
 <a href="{% url 'patient_book' %}">Book an appointment</a>
 {%endblock%}
 
-{% block topic2 %}
-<a href="{% url 'patient_cancel' %}">Cancel an appointment</a>
-{%endblock%}
-
 {% block topic3 %}
 <a href="{% url 'myPHR' current.id %}">My PHR</a>
 {%endblock%}
 
 {% block topic4 %}
-<a href="{% url 'edit_PHR' current.id %}">Edit My PHR</a>
-{%endblock%}
-
-{% block topic5 %}
-<a href="{% url 'patient_schedule' current.id %}">My schedule</a>
+<a href="{% url 'patient_schedule' current.id %}">My appointment</a>
 {%endblock%}
 
 {% block bodyblock %}

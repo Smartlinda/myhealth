@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'allauth.account', # for logging in
     'allauth.socialaccount',
     'widget_tweaks',
+    'datetimewidget',
 ]
 
 MIDDLEWARE = [
@@ -165,10 +166,11 @@ ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_UNIQUE_EMAIL = True
+
 ACCOUNT_SIGNUP_FORM_CLASS = "health.forms.SignupForm"
 ACCOUNT_ADAPTER = 'myhealth.users.adaptor.MyAccountAdapter'
-# LOGIN_REDIRECT_URL = 'signup/'
-LOGOUT_REDIRECT_URL = 'user_login'
+
+LOGOUT_REDIRECT_URL = 'account_login'
 ACCOUNT_LOGOUT_ON_GET = True
 # ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 

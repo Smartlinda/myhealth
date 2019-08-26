@@ -19,16 +19,21 @@
 {%endblock%}
 
 {% block bodyblock %}
+<h2>Appointments for today</h2>
 {% if appoints %}
   {% for i in appoints %}
-    <div class="panel panel-success">
+
+    <div class="panel panel-default">
       <div class="panel-heading">Appointment</div>
-      <div class="panel-body">
+      <div class="panel-body" style="text-align:center">
+        <a href="{% url 'edit_schedule' i.id %}">
         Patient: {{i.patient.first_name}}{{i.patient.last_name}}<br>
         Doctor: {{i.doctorid.first_name}}{{i.doctorid.last_name}}<br>
         Time: {{i.time}}
+        </a>
       </div>
     </div>
+
   {% endfor %}
 {%else%}
   You have no appointment for today!

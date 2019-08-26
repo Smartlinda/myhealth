@@ -17,19 +17,18 @@
 <a href="{% url 'recep_book' %}">Book an appointment</a>
 {%endblock%}
 
-{% block topic3 %}
-<a href="{% url 'recep_cancel' %}">Cancel an appointment</a>
-{%endblock%}
-
 {% block bodyblock %}
+<h3>Appointments for today</h3>
 {% if appoints %}
   {% for i in appoints %}
-    <div class="panel panel-success">
+    <div class="panel panel-default">
       <div class="panel-heading">Appointment</div>
-      <div class="panel-body">
-        Patient: {{i.select_related('patient__user___first_name')}}{{i.select_related('patient__user___last_name')}}<br>
-        Doctor: {{i.select_related('doctorid__user___first_name')}}{{select_related('doctorid__user___last_name')}}<br>
-        Time: {{i.time}}
+      <div class="panel-body" style="text-align:center">
+        Patient: {{i.patient.first_name}}{{i.patient.last_name}}<br>
+        Doctor: {{i.doctorid.first_name}}{{i.doctorid.last_name}}<br>
+        Date: {{i.date}}<br>
+        Time: {{i.time}}<br>
+        <a href="{% url 'recep_cancel' i.id %}">Cancel</a>
       </div>
     </div>
   {% endfor %}

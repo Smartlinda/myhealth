@@ -1,20 +1,36 @@
 {% extends 'health/dochome.html' %}
+{% load widget_tweaks %}
+
+{% block headblock%}
+
+  <!-- CDN for widget_tweaks -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+{% endblock %}
 
 {% block bodyblock %}
 <form method="post" >
   {% csrf_token %}
-  <div>
-    Patient:{{form.patient}}<br>
-    Doctor:{{form.doctor}}<br>
-    Name:{{form.name}}<br>
+  <div class="form-group">
+    <label for="{{ form.patient.id_for_label }}">{{ form.patient.label }}</label>
+    {{ form.patient|add_class:'form-control' }}
+    {% for error in form.patient.errors %}
+      <span class="help-block">{{ error }}</span>
+    {% endfor %}
+
+    <label for="{{ form.doctor.id_for_label }}">{{ form.doctor.label }}</label>
+    {{ form.doctor|add_class:'form-control' }}
+    {% for error in form.doctor.errors %}
+      <span class="help-block">{{ error }}</span>
+    {% endfor %}
+
+    <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+    {{ form.name|add_class:'form-control' }}
+    {% for error in form.name.errors %}
+      <span class="help-block">{{ error }}</span>
+    {% endfor %}
   </div>
   <input type="submit" value="Submit" />
 </form>
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
-    {% endfor %}
-</ul>
-{% endif %}
+
 {%endblock%}

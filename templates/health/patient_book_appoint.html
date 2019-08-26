@@ -1,11 +1,23 @@
 {% extends 'health/base.html' %}
 {% load static %}
+{% load widget_tweaks %}
+
+{% block headblock%}
+<!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+  <!-- Fengyuan Chen's Datepicker -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css" integrity="sha256-b88RdwbRJEzRx95nCuuva+hO5ExvXXnpX+78h8DjyOE=" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.js" integrity="sha256-/7FLTdzP6CfC1VBAj/rsp3Rinuuu9leMRGd354hvk0k=" crossorigin="anonymous"></script>
+
+<!-- CDN for widget_tweaks -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+{% endblock %}
+
 {% block topic1 %}
 <a href="{% url 'patient_book' %}">Book an appointment</a>
-{%endblock%}
-
-{% block topic2 %}
-<a href="{% url 'patient_cancel' %}">Cancel an appointment</a>
 {%endblock%}
 
 {% block topic3 %}
@@ -13,13 +25,49 @@
 {%endblock%}
 
 {% block topic4 %}
-<a href="{% url 'edit_PHR' current.id %}">Edit My PHR</a>
-{%endblock%}
-
-{% block topic5 %}
-<a href="{% url 'patient_schedule' current.id %}">My schedule</a>
+<a href="{% url 'patient_schedule' current.id %}">My appointment</a>
 {%endblock%}
 
 {% block bodyblock %}
-Click on the sidebar for further functions!
+<form  action="" method="POST">
+  {% csrf_token %}
+
+    <div class="form-group">
+      <label for="{{ form.patient.id_for_label }}">{{ form.patient.label }}</label>
+      {{ form.patient|add_class:'form-control' }}
+      {% for error in form.patient.errors %}
+        <span class="help-block">{{ error }}</span>
+      {% endfor %}
+
+      <label for="{{ form.doctorid.id_for_label }}">{{ form.doctorid.label }}</label>
+      {{ form.doctorid|add_class:'form-control' }}
+      {% for error in form.doctorid.errors %}
+        <span class="help-block">{{ error }}</span>
+      {% endfor %}
+
+      <br><label for="{{ form.date.id_for_label }}">{{ form.date.label }}</label>
+      {{ form.date }}<br>
+      <br>
+
+      <label for="{{ form.time.id_for_label }}">{{ form.time.label }}</label>
+      {{ form.time|add_class:'form-control' }}
+      {% for error in form.time.errors %}
+        <span class="help-block">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+  <!-- Patient: {{ current.first_name }} {{current.last_name}}<br>
+  Doctor: {{form.doctorid}}<br>
+  Date: {{ form.date }}<br>
+  Time: {{ form.time }}<br> -->
+  <input id="submit" type="submit" value="Submit">
+
+</form>
+<script>
+$(function () {
+  $("#id_date").datepicker({
+    format:'dd/mm/yyyy',
+  });
+});
+</script>
 {%endblock%}
