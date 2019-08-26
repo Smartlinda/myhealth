@@ -30,7 +30,7 @@ class User(AbstractUser):
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES,null=True)
     sex = models.BooleanField(blank=True, null=True)
     tel_no = models.CharField(max_length=255, blank=True, null=True)
-    dob = models.DateField(db_column='DOB', blank=True, null=True)
+    dob = models.DateField(db_column='DOB', blank=True, null=True,help_text="dd/mm/YYYY")
     address = models.CharField(max_length=255, blank=True, null=True)
 
     # USERNAME_FIELD = 'email'
