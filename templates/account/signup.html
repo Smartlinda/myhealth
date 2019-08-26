@@ -3,13 +3,16 @@
 {% load widget_tweaks %}
 
 {% block headblock %}
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-  <!-- make panel clickable -->
-  <script src="{% static "js/schedule_panel.js" %}"></script>
-  <link href="{% static "css/schedule_panel.css" %}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+<!-- Fengyuan Chen's Datepicker -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css" integrity="sha256-b88RdwbRJEzRx95nCuuva+hO5ExvXXnpX+78h8DjyOE=" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.js" integrity="sha256-/7FLTdzP6CfC1VBAj/rsp3Rinuuu9leMRGd354hvk0k=" crossorigin="anonymous"></script>
+
+<!-- CDN for widget_tweaks -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
 {% endblock %}
 
 {% block bodyblock %}
@@ -18,15 +21,59 @@
   <form id="user_form" method="post" >
     {% csrf_token %}
     <div>
-      {% for field in form.visible_fields %}
         <div class="form-group">
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{ field|add_class:'form-control' }}
-          {% for error in field.errors %}
+          <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+          {{ form.email|add_class:'form-control' }}
+          {% for error in form.email.errors %}
+            <span class="help-block">{{ error }}</span>
+          {% endfor %}
+
+          <label for="{{ form.user_type.id_for_label }}">{{ form.user_type.label }}</label>
+          {{ form.user_type|add_class:'form-control' }}
+          {% for error in form.user_type.errors %}
+            <span class="help-block">{{ error }}</span>
+          {% endfor %}
+
+          <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+          {{ form.first_name|add_class:'form-control' }}
+          {% for error in form.first_name.errors %}
+            <span class="help-block">{{ error }}</span>
+          {% endfor %}
+
+          <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+          {{ form.last_name|add_class:'form-control' }}
+          {% for error in form.last_name.errors %}
+            <span class="help-block">{{ error }}</span>
+          {% endfor %}
+
+          <label for="{{ form.sex.id_for_label }}">{{ form.sex.label }}</label>
+          {{ form.sex|add_class:'form-control' }}
+          {% for error in form.sex.errors %}
+            <span class="help-block">{{ error }}</span>
+          {% endfor %}
+
+          <label for="{{ form.tel_no.id_for_label }}">{{ form.tel_no.label }}</label>
+          {{ form.tel_no|add_class:'form-control' }}
+          {% for error in form.tel_no.errors %}
+            <span class="help-block">{{ error }}</span>
+          {% endfor %}
+
+          <br><label for="{{ form.dob.id_for_label }}">{{ form.dob.label }}</label>
+          {{ form.dob }}<br>
+          <br>
+
+          <label for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
+          {{ form.address|add_class:'form-control' }}
+          {% for error in form.address.errors %}
+            <span class="help-block">{{ error }}</span>
+          {% endfor %}
+
+          <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+          {{ form.password|add_class:'form-control' }}
+          {% for error in form.password.errors %}
             <span class="help-block">{{ error }}</span>
           {% endfor %}
         </div>
-      {% endfor %}
     </div>
     <input type="submit" name="submit">
 
