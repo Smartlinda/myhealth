@@ -9,7 +9,7 @@ from datetimewidget.widgets import DateWidget,TimeWidget
 class CustomUserCreationForm(UserCreationForm):
 
     tel_no = forms.CharField(max_length=255, label='Telephone number')
-    dob = forms.DateField(label='Date of Birth',input_formats=['%d/%m/%Y'])
+    dob = forms.DateField(label='Date of Birth',input_formats=['%Y/%m/%d'],help_text="format (yyyy-mm-dd)")
     SEX = [('yes','Female'),('no','Male')]
     sex = forms.BooleanField(label='Sex',widget=forms.Select(choices = SEX))
 
