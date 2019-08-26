@@ -7,31 +7,32 @@ from health.models import User, Department, Disease, Ehr,Hospital,LabTest
 from health.models import MedicalSupply,Order,Orderdetail,Phr,Schedule
 from django.contrib.auth import get_user_model
 from decimal import *
+from allauth.account.adapter import DefaultAccountAdapter
 
 def populate():
 
 ## making a superuser
 
-    # User = get_user_model()
-    #
+    User = get_user_model()
+
     # email = 'xiong199704242@gmail.com'
     # password = 'asdfghjkl'
     # user_type = 5
     #
     # super = User.objects.create_superuser(email, user_type, password)
-    #
-    # # making some new users for fun
-    #
-    # doc1 = User.objects.signup(email='jlennon@beatles.com',password='glassdoor',user_type=1)
-    # doc2 = User.objects.signup(email='real@tech.com',password='beautyblender',user_type=1)
-    # conduc = User.objects.signup(email='donald@trump.com',password='billions',user_type=2)
-    # recep = User.objects.signup(email='dragrace@vh1.com',password='kittygirl',user_type=3)
-    # patient1 = User.objects.create_user(email='linda@xiong.com',password='xiaotaoqi',user_type=4)
-    # patient2 = User.objects.create_user(email='adam@burae.com',password='adamsmith',user_type=4)
-    # patient3 = User.objects.create_user(email='John@sugerman.com',password='johnjohnson',user_type=4)
 
-    # making examples for Hospital
-    # hos = Hospital.objects.create(name="Mary Jane Practice",address="21 Beith Street")
+    # making some new users for fun
+
+    doc1 = User.objects.create_user(email='jlennon@beatles.com',password='glassdoor',user_type=1,first_name='Jlennon',last_name='Beatles')
+    doc2 = User.objects.create_user(email='real@tech.com',password='beautyblender',user_type=1,first_name='Real',last_name='Tech')
+    conduc = User.objects.create_user(email='donald@trump.com',password='billions',user_type=2,first_name='Donald',last_name='Trump')
+    recep = User.objects.create_user(email='dragrace@vh1.com',password='kittygirl',user_type=3,first_name='Drag',last_name='Queen')
+    patient1 = User.objects.create_user(email='linda@xiong.com',password='xiaotaoqi',user_type=4,first_name='Linda',last_name='Xiong')
+    patient2 = User.objects.create_user(email='adam@burae.com',password='adamsmith',user_type=4,first_name='Adam',last_name='Burae')
+    patient3 = User.objects.create_user(email='John@sugerman.com',password='johnjohnson',user_type=4,first_name='John',last_name='sugerman')
+
+    #making examples for Hospital
+    hos = Hospital.objects.get_or_create(name="Mary Jane Practice",address="21 Beith Street")[0]
     hos1 = Hospital.objects.create(name="Gardener Practice",address="19 Beith Street")
 
     # making examples for Department

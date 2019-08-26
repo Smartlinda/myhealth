@@ -33,7 +33,6 @@ SECRET_KEY = 'e$w4_d)z(z)4+5r98#@c4%52ymmd@96fv@x6#zzc7vs-aznqdo'
 DEBUG = False
 ALLOWED_HOSTS = ['myhealthdb.herokuapp.com']
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
