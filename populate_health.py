@@ -23,13 +23,13 @@ def populate():
 
     # making some new users for fun
 
-    doc1 = User.objects.create_user(username=None,email='jlennon@beatles.com',password='glassdoor',user_type=1,first_name='Jlennon',last_name='Beatles')
-    doc2 = User.objects.create_user(username=None,email='real@tech.com',password='beautyblender',user_type=1,first_name='Real',last_name='Tech')
-    conduc = User.objects.create_user(username=None,email='donald@trump.com',password='billions',user_type=2,first_name='Donald',last_name='Trump')
-    recep = User.objects.create_user(username=None,email='dragrace@vh1.com',password='kittygirl',user_type=3,first_name='Drag',last_name='Queen')
-    patient1 = User.objects.create_user(username=None,email='linda@xiong.com',password='xiaotaoqi',user_type=4,first_name='Linda',last_name='Xiong')
-    patient2 = User.objects.create_user(username=None,email='adam@burae.com',password='adamsmith',user_type=4,first_name='Adam',last_name='Burae')
-    patient3 = User.objects.create_user(username=None,email='John@sugerman.com',password='johnjohnson',user_type=4,first_name='John',last_name='sugerman')
+    doc1 = User.objects.create_user(username='jlennon@beatles.com',email='jlennon@beatles.com',password='glassdoor',user_type=1,first_name='Jlennon',last_name='Beatles')
+    doc2 = User.objects.create_user(username='real@tech.com',email='real@tech.com',password='beautyblender',user_type=1,first_name='Real',last_name='Tech')
+    conduc = User.objects.create_user(username='donald@trump.com',email='donald@trump.com',password='billions',user_type=2,first_name='Donald',last_name='Trump')
+    recep = User.objects.create_user(username='dragrace@vh1.com',email='dragrace@vh1.com',password='kittygirl',user_type=3,first_name='Drag',last_name='Queen')
+    patient1 = User.objects.create_user(username='linda@xiong.com',email='linda@xiong.com',password='xiaotaoqi',user_type=4,first_name='Linda',last_name='Xiong')
+    patient2 = User.objects.create_user(username='adam@burae.com',email='adam@burae.com',password='adamsmith',user_type=4,first_name='Adam',last_name='Burae')
+    patient3 = User.objects.create_user(username='John@sugerman.com',email='John@sugerman.com',password='johnjohnson',user_type=4,first_name='John',last_name='sugerman')
 
     #making examples for Hospital
     hos = Hospital.objects.get_or_create(name="Mary Jane Practice",address="21 Beith Street")[0]
