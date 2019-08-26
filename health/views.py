@@ -61,10 +61,6 @@ def patienthome(request):
 def user_login(request):
     return redirect('login/')
 
-# class SignUp(CreateView):
-#     form_class = CustomUserCreationForm
-#     success_url = reverse_lazy('adminhome')
-#     template_name = 'signup.html'
 
 #FOR doctors to see the schedule for the day
 @login_required
