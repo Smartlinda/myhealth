@@ -28,7 +28,7 @@ MEDIA_ROOT = MEDIA_DIR
 SECRET_KEY = 'e$w4_d)z(z)4+5r98#@c4%52ymmd@96fv@x6#zzc7vs-aznqdo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 
 
