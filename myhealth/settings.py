@@ -172,6 +172,7 @@ ACCOUNT_ADAPTER = 'myhealth.users.adaptor.MyAccountAdapter'
 LOGOUT_REDIRECT_URL = 'account_login'
 ACCOUNT_LOGOUT_ON_GET = True
 # ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ALLOWED_HOSTS = ['fengrouze.pythonanywhere.com']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
