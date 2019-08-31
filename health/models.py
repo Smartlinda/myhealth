@@ -33,8 +33,6 @@ class User(AbstractUser):
     dob = models.DateField(db_column='DOB', blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
 
-    # USERNAME_FIELD = 'email'
-    # EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = ['user_type','email','password',]
 
     def __str__(self):
