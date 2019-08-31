@@ -6,27 +6,27 @@ from django.contrib.auth import get_user_model
 from health.widgets import SelectTimeWidget
 from datetimewidget.widgets import DateWidget,TimeWidget
 
-# class CustomUserCreationForm(UserCreationForm):
-#
-#     tel_no = forms.CharField(max_length=255, label='Telephone number')
-#     dob = forms.DateField(label='Date of Birth',input_formats=['%Y/%m/%d'],help_text='YYYY/mm/dd')
-#     SEX = [('yes','Female'),('no','Male')]
-#     sex = forms.BooleanField(label='Sex',widget=forms.Select(choices = SEX))
-#
-#
-#     class Meta(UserCreationForm):
-#         model = User
-#         fields = ('email','user_type','first_name','last_name','sex','tel_no','dob','address','password',)
-#
-#     # def __init__(self,user,*args,**kwargs):
-#
-#
-#
-# class CustomUserChangeForm(UserChangeForm):
-#
-#     class Meta:
-#         model = User
-#         fields = ('email','user_type','first_name','last_name','sex','tel_no','dob','address',)
+class CustomUserCreationForm(UserCreationForm):
+
+    tel_no = forms.CharField(max_length=255, label='Telephone number')
+    dob = forms.DateField(label='Date of Birth',input_formats=['%Y/%m/%d'],help_text='YYYY/mm/dd')
+    SEX = [('yes','Female'),('no','Male')]
+    sex = forms.BooleanField(label='Sex',widget=forms.Select(choices = SEX))
+
+
+    class Meta(UserCreationForm):
+        model = User
+        fields = ('email','user_type','first_name','last_name','sex','tel_no','dob','address','password',)
+
+    # def __init__(self,user,*args,**kwargs):
+
+
+
+class CustomUserChangeForm(UserChangeForm):
+
+    class Meta:
+        model = User
+        fields = ('email','user_type','first_name','last_name','sex','tel_no','dob','address',)
 
 
 class SignupForm(forms.ModelForm):
